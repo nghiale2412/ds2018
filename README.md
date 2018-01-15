@@ -10,7 +10,7 @@ Groups are expected to:
 Group Info
 =======================
 
-Le Trung Nghia - USTHBI5-098
-Ta Nguyen Long - USTHBI5-080
-Nguyen Trong Nhan - USTHBI4-115
-Do Huy Manh - USTHBI6-093
+* Le Trung Nghia - USTHBI5-098
+* Ta Nguyen Long - USTHBI5-080
+* Nguyen Trong Nhan - USTHBI4-115
+* Do Huy Manh - USTHBI6-093
