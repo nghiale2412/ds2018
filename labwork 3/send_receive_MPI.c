@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
 			size_t length = ftell(f); // read the position which is the size
 			fseek(f, pos, SEEK_SET);
 			int lengthContent = length;
+			printf("%d\n", lengthContent);
 
 			//allocate data into string
 			char *content;
@@ -50,16 +51,29 @@ int main(int argc, char *argv[])
                 	content[temp++] = c;
         	}
         	//printf("%s\n", content);
-			
+			int count=0;
+			int tempLengthContent= lengthContent;
+			while(tempLengthContent!=0){
+				tempLengthContent = tempLengthContent/10;
+				count+=1;
+			}
+			printf("%d\n", count);
 			fclose(f);
-			
+			int tem;
 			//send using mpi
-			MPI_Send(&lengthContent, sizeof(lengthContent)/sizeof(int), MPI_INT, dest, tagContentSize, MPI_COMM_WORLD);
-			
+			MPI_Send(&lengthContent, count, MPI_INT, dest, tagContentSize, MPI_COMM_WORLD);
+			tem = sizeof(lengthContent)/sizeof(int);
+			printf("this is temp for lengthContent%d\n", tem);
+
 			MPI_Send(fileName, sizeof(fileName)/sizeof(char), MPI_CHAR, dest, tagName, MPI_COMM_WORLD);
-			MPI_Send(content, sizeof(content)/sizeof(char), MPI_CHAR, dest, tagContent, MPI_COMM_WORLD);
+			tem = sizeof(fileName)/sizeof(char);
+			printf("this is temp for filename%d\n", tem);
+
+			MPI_Send(content, lengthContent, MPI_CHAR, dest, tagContent, MPI_COMM_WORLD);
+			
+
 			printf("Send successfuly\n");
-		}else if (world_rank == 1) { //receive file 	
+		}else { //receive file 	
 			printf("This is Receive\n");	
 
 			char directoryTemp[] = "receive/";
