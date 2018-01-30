@@ -1,5 +1,6 @@
 struct file{
-	int a;
+	char *file_name;
+	char *file_content;
 };
 
 program FILE_TRANSFER_PROG

@@ -6,20 +6,29 @@
 
 #include "file_transfer.h"
 
-FILE *fr;
-
 int *
 send_file_1_svc(file *argp, struct svc_req *rqstp)
 {
 	static int  result;
 
-	printf("File name received!: %s\n", argp->file_name);
-	fr = fopen(argp->file_name,"w");
-	fprintf(fr,"%s",argp->file_content);
+	FILE *fr;
+	char *file_name;
+	char *file_content;
+
+	file_name = (char *) malloc(sizeof(char)*strlen(argp->file_name));
+	strcpy(file_name,argp->file_name);
+	fr = fopen(file_name,"w");
+	file_content = (char *) malloc(sizeof(char)*strlen(argp->file_content));
+	int j=0;
+	for (int i = 0; i < strlen(argp->file_content); ++i)
+	{
+		file_content[j++] = argp->file_content[i];                            
+	}
+	fprintf(fr,"%s",file_content);
 	fflush(stdin);
-	fclose(fr);
-	printf("File received successfully\n");
-	
-	result = 1;
+    fclose(fr);
+    printf("--Receive successfuly\n");
+    result = 1;
+
 	return &result;
 }

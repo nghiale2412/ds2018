@@ -20,7 +20,7 @@ struct file {
 };
 typedef struct file file;
 
-#define FILE_TRANSFER_PROG 0x24121996
+#define FILE_TRANSFER_PROG 99
 #define FILE_TRANSFER_VERS 1
 
 #if defined(__STDC__) || defined(__cplusplus)

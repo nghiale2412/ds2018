@@ -24,15 +24,19 @@ file_transfer_prog_1(char *host)
 		exit (1);
 	}
 #endif	/* DEBUG */
+	
 	int temp = 0;
 	int c;
 	printf("Enter file name: ");
 	scanf("%s",file_name);
 
-	send_file_1_arg.file_name = file_name;
+	strcpy(send_file_1_arg.file_name,file_name);
 
 	fs = fopen(file_name,"r");
-
+	if(fs == NULL){
+		printf("LOL. File does not exist dude!");
+		exit(1);
+	}
 	//get the length of file's content + filename
     size_t pos = ftell(fs);    // Current position
 	fseek(fs, 0, SEEK_END);    // Go to end
@@ -42,22 +46,18 @@ file_transfer_prog_1(char *host)
 
 	//allocate data into string
  	s = (char *) malloc(lengthint*sizeof(char));
-	//copy filename to the first part of s
-	strcpy(s,file_name);
-	//append a new line in s
-    strcat(s,"\n");
-    //index for s, with value of filename
-	temp = strlen(file_name)+1;
 	//save content of file into s
 	if (fs){
 		while((c = getc(fs))!=EOF)
 			s[temp++] = c;
 	}
+
+	strcpy(send_file_1_arg.file_content,s);
+
 	result_1 = send_file_1(&send_file_1_arg, clnt);
 	if (result_1 == (int *) NULL) {
 		clnt_perror (clnt, "call failed");
 	}
-	
 #ifndef	DEBUG
 	clnt_destroy (clnt);
 #endif	 /* DEBUG */
@@ -74,7 +74,6 @@ main (int argc, char *argv[])
 		exit (1);
 	}
 	host = argv[1];
-	
 	file_transfer_prog_1 (host);
 exit (0);
 }
