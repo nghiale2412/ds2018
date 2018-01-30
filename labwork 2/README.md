@@ -1,10 +1,13 @@
-Compile steps:
+# Compile steps:
 
-rpcgen -a -C file_transfer.x
-make -f Makefile.file_transfer
+## To create a fresh client and server code
+==rpcgen -a -C file_transfer.x==
 
-For server side:
-./file_transfer_server &
+### To update and compile all the code
+==make -f Makefile.file_transfer==
 
-For client side: 
-./file_transfer_client <host>
+#### For server side:
+==./file_transfer_server &==
+
+##### For client side: 
+==./file_transfer_client <host>==
