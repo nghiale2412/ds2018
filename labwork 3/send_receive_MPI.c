@@ -73,6 +73,7 @@ int main(int argc, char *argv[])
 			
 
 			printf("Send successfuly\n");
+			free(content);
 		}else { //receive file 	
 			printf("This is Receive\n");	
 
@@ -108,6 +109,7 @@ int main(int argc, char *argv[])
 
 			fclose(f);
 			printf("--Receive successfuly\n");
+			free(tempContent);
 			fflush(stdin);
 		}
 	}
