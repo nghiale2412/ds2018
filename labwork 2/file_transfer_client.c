@@ -38,10 +38,9 @@ file_transfer_prog_1(char *host)
 		exit(1);
 	}
 	//get the length of file's content + filename
-        size_t pos = ftell(fs);    // Current position
 	fseek(fs, 0, SEEK_END);    // Go to end
 	size_t length = ftell(fs); // read the position which is the size
-	fseek(fs, pos, SEEK_SET);
+	fseek(fs, 0, SEEK_SET);
 	int lengthint = length+strlen(file_name);
 
 	//allocate data into string
@@ -53,6 +52,7 @@ file_transfer_prog_1(char *host)
 	}
 
 	strcpy(send_file_1_arg.file_content,s);
+	free(s);
 
 	result_1 = send_file_1(&send_file_1_arg, clnt);
 	if (result_1 == (int *) NULL) {
