@@ -46,10 +46,7 @@ int main(int argc, char *argv[])
 			//allocate data into string
 			char *content;
 			content = (char *) malloc(lengthContent*sizeof(char));
-			if (f){
-            			while((c = getc(f))!=EOF)
-                		content[temp++] = c;
-        		}
+			fread(content, length, 1, f);
         		//printf("%s\n", content);
 			int count=0;
 			int tempLengthContent= lengthContent;
