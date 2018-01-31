@@ -75,5 +75,5 @@ main (int argc, char *argv[])
 	}
 	host = argv[1];
 	file_transfer_prog_1 (host);
-exit (0);
+        exit (0);
 }
