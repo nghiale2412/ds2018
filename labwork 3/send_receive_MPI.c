@@ -47,10 +47,10 @@ int main(int argc, char *argv[])
 			char *content;
 			content = (char *) malloc(lengthContent*sizeof(char));
 			if (f){
-            	while((c = getc(f))!=EOF)
-                	content[temp++] = c;
-        	}
-        	//printf("%s\n", content);
+            			while((c = getc(f))!=EOF)
+                		content[temp++] = c;
+        		}
+        		//printf("%s\n", content);
 			int count=0;
 			int tempLengthContent= lengthContent;
 			while(tempLengthContent!=0){
