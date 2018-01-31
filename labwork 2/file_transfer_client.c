@@ -38,7 +38,7 @@ file_transfer_prog_1(char *host)
 		exit(1);
 	}
 	//get the length of file's content + filename
-    size_t pos = ftell(fs);    // Current position
+        size_t pos = ftell(fs);    // Current position
 	fseek(fs, 0, SEEK_END);    // Go to end
 	size_t length = ftell(fs); // read the position which is the size
 	fseek(fs, pos, SEEK_SET);
