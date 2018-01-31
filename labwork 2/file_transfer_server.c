@@ -26,9 +26,11 @@ send_file_1_svc(file *argp, struct svc_req *rqstp)
 	}
 	fprintf(fr,"%s",file_content);
 	fflush(stdin);
-    fclose(fr);
-    printf("--Receive successfuly\n");
-    result = 1;
+        fclose(fr);
+	free(file_name);
+	free(file_content);
+        printf("--Receive successfuly\n");
+        result = 1;
 
 	return &result;
 }
