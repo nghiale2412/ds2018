@@ -1,0 +1,76 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf830
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \\documentclass\{article\}\
+\
+\
+\\title\{Report #2: RPC\}\
+\\author\{Le Trung Nghia - USTHBI5-098 ** Ta Nguyen Long - USTHBI5-080 \\\\ Do Huy Manh - USTHBI6-093 ** Nguyen Trong Nhan - USTHBI4-115 \}\
+\\date\{January 2018\}\
+\
+\\usepackage\{graphicx\}\
+\\usepackage\{amsfonts\}\
+\\usepackage\{amssymb\}\
+\\usepackage\{\}\
+\\usepackage\{\}\
+\\usepackage\{\}\
+\
+\
+\
+\\begin\{document\}\
+1. Desgin the RPC service\
+\
+Complier: rpcgen \'96C -a\
+\
+2. Organize system\
+ - Figure is attached\
+ \
+3. Implement the file transfer\
+- int *\
+send_file_1_svc(file *argp, struct svc_req *rqstp)\
+--> to send the file from client to server\
+\
+fseek(fs, 0, SEEK_END);    \
+	size_t length = ftell(fs); \
+	fseek(fs, 0, SEEK_SET);\
+	int lengthint = length+strlen(file_name);\
+--> get the length of file's content + filename\
+\
+if (fs)\{\
+	while((c = getc(fs))!=EOF)\
+	s[temp++] = c;\
+	\}\
+--> save the content info\
+\
+ \\section\{Compile Steps:\}\
+\
+To create a fresh client and server\
+\
+rpcgen -a -C file_transfer.x\
+\
+To update and compile all the codes\
+\
+make -f Makefile.file_transfer\
+\
+For server side:\
+\
+./file_transfer_server &\
+\
+For client side:\
+\
+./file_transfer_client <host>\
+\
+\
+4. Who does what!\
+Le Trung Nghia: work on RPC section\
+Ta Nguyen Long + Do Huy Manh: work on MPI section\
+Do Huy Manh + Nguyen Trong Nhan: work on the report\
+\
+\\section\{Introduction\}\
+\
+\\end\{document\}\
+}
