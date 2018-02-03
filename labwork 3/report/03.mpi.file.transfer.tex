@@ -1,0 +1,76 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf830
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Consolas;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red203\green35\blue57;\red27\green31\blue34;
+\red7\green68\blue184;\red6\green33\blue79;\red255\green255\blue255;}
+{\*\expandedcolortbl;;\csgenericrgb\c0\c0\c0;\cssrgb\c84314\c22745\c28627;\cssrgb\c14118\c16078\c18039;
+\cssrgb\c0\c36078\c77255;\cssrgb\c1176\c18431\c38431;\cssrgb\c100000\c100000\c100000;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \\documentclass\{article\}\
+\
+\
+\\title\{Report #3: MPI\}\
+\\author\{Le Trung Nghia - USTHBI5-098 ** Ta Nguyen Long - USTHBI5-080 \\\\ Do Huy Manh - USTHBI6-093 ** Nguyen Trong Nhan - USTHBI4-115 \}\
+\\date\{February 2018\}\
+\
+\\usepackage\{graphicx\}\
+\\usepackage\{amsfonts\}\
+\\usepackage\{amssymb\}\
+\\usepackage\{\}\
+\\usepackage\{\}\
+\\usepackage\{\}\
+\
+\
+\
+\\begin\{document\}\
+1. Desgin the MPI service\
+\
+Complier: rpcgen \'96C -a\
+\
+2. Organize system\
+ - Figure is attached\
+ \
+3. Implement the file transfer\
+- int dest = 1\
+  int source = 0\
+\'97> destination, which rank to send\
+\
+\cf2 - 
+\f1 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 if\strokec4  (world_rank == \strokec5 0\strokec4  )\{\
+\pard\pardeftab720\sl280\partightenfactor0
+\cf2 \strokec5 printf\strokec4 (\strokec6 "This is Send\\n"\strokec4 );\cf4 \cb7 \
+\'97> send the file
+\f0 \cf0 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+- int c,temp;\
+temp=0;\
+char fileName[100];\
+printf("Enter name of the file to send :\\n");\
+scanf("%s", fileName);\
+f = fopen(fileName,"r");\
+\'97> read file\
+\
+MPI_Send(&lengthContent, count, MPI_INT, dest, tagContentSize, MPI_COMM_WORLD);\
+tem = sizeof(lengthContent)/sizeof(int);\
+printf("this is temp for lengthContent%d\\n", tem);\
+\
+MPI_Send(fileName, sizeof(fileName)/sizeof(char), MPI_CHAR, dest, tagName, MPI_COMM_WORLD);\
+tem = sizeof(fileName)/sizeof(char);\
+printf("this is temp for filename%d\\n", tem);\
+\
+MPI_Send(content, lengthContent, MPI_CHAR, dest, tagContent, MPI_COMM_WORLD);\
+printf("Send successfuly\\n");\
+\'97> Send using MPI\
+\
+4. Who does what!\
+Le Trung Nghia: work on RPC section\
+Ta Nguyen Long + Do Huy Manh: work on MPI section\
+Do Huy Manh + Nguyen Trong Nhan: work on the report\
+\
+\\section\{Introduction\}\
+\
+\\end\{document\}\
+}
