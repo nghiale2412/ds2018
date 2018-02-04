@@ -1,0 +1,105 @@
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class Bai04 {
+    /*
+     	Cho phép nhập từ bàn phím thông tin các đĩa cd album âm nhạc gồm: mã cd(int), 
+     tiêu đề(String), ca sỹ(String), giá (double), năm phát hành (int). Hãy lưu thông tin 
+     các đĩa cd vào tập tin cdmusic.dat.
+     	Đọc thông tin các cd album âm nhạc từ tập tin cdmusic.dat. Hiển thị thông tin đọc được ra màn hình.
+     */
+
+    public static void writeToFile() {
+        DataOutputStream dos = null;
+        try {
+            Scanner input = new Scanner(System.in);
+            int idCD;
+            String title;
+            String collectionName;
+            String cdType;
+            double price;
+            int yearOfRelease;
+            System.out.printf("Nhập ma cd: ");
+            idCD = input.nextInt();
+
+            input = new Scanner(System.in);
+            System.out.printf("Nhập tiêu đề cd: ");
+            title = input.nextLine();
+
+            System.out.printf("Nhập collection của cd: ");
+            collectionName = input.nextLine();
+            System.out.printf("Nhập loại cd (video|audio): ");
+            cdType = input.nextLine();
+            System.out.printf("Nhập giá cd: ");
+            price = input.nextDouble();
+            System.out.printf("Nhập năm phát hành cd: ");
+            yearOfRelease = input.nextInt();
+
+            dos = new DataOutputStream(new FileOutputStream("cdmusic.dat"));
+            dos.writeInt(idCD);
+            dos.writeUTF(title);
+            dos.writeUTF(collectionName);
+            dos.writeUTF(cdType);
+            dos.writeDouble(price);
+            dos.writeInt(yearOfRelease);
+
+            System.out.println("Thông tin cd đã được ghi ra file thành công");
+        } catch (FileNotFoundException ex) {
+            System.out.println("Có lỗi");
+        } catch (IOException ex) {
+            Logger.getLogger(Bai04.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                dos.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Bai04.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public static void readFromFile() {
+        DataInputStream dis = null;
+        try {
+            dis = new DataInputStream(new FileInputStream("cdmusic.dat"));
+            int idCD = dis.readInt();
+            String title = dis.readUTF();
+            String collectionName = dis.readUTF();
+            String cdType = dis.readUTF();
+            double price = dis.readDouble();
+            int yearOfRelease = dis.readInt();
+            System.out.println("Thông tin CD:");
+            System.out.println("+ ID: " + idCD);
+            System.out.println("+ Title: " + title);
+            System.out.println("+ Collection name: " + collectionName);
+            System.out.println("+ Type of CD: " + cdType);
+            System.out.println("+ Price: " + price);
+            System.out.println("+ Year of Realease: " + yearOfRelease);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Bai04.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Bai04.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                dis.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Bai04.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        writeToFile();
+        readFromFile();
+    }
+
+}
