@@ -5,6 +5,10 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <unistd.h>
+#include <arpa/inet.h>
+#include <time.h>
+#include <signal.h>
+#include <netinet/in.h>
 
 // typedef struct keyvalues{
 //     char* key;
@@ -15,6 +19,8 @@
 #define modifyCommand "<CMD>modify</CMD>"
 #define getCommand "<CMD>get</CMD>"
 #define deleteCommand "<CMD>delete</CMD>"
+
+struct sockaddr_in ad;
 
 char *inputString(FILE* fp, size_t size){
 //The size is extended by the input with the value of the provisional
@@ -66,28 +72,35 @@ char *strcatMutiplyKV(char *s,char *key,char *value){
     return s;
 }
 
-int main(int argc, char* argv[]) {
-    int so,j,i;
+void tcp_connect(){
+    int j,i;
     char *s;
     char *tempError;
-    struct sockaddr_in ad;
-    printf("\n");
     socklen_t ad_length = sizeof(ad);
-    struct hostent *hep;
-
-    // create socket
     int serv = socket(AF_INET, SOCK_STREAM, 0);
-
-    // init address
-    //hep = gethostbyname(argv[1]);
-    hep = gethostbyname("localhost");
-    memset(&ad, 0, sizeof(ad));
-    ad.sin_family = AF_INET;
-    ad.sin_addr = *(struct in_addr *)hep->h_addr_list[0];
-    ad.sin_port = htons(12345);
-
     // connect to server
     connect(serv, (struct sockaddr *)&ad, ad_length);
+    /*while (1) {
+        // after connected, it's client turn to chat
+        // send some data to server
+        //server_status_check(serv);
+        printf("Client>");
+        scanf("%s", s);
+        write(serv, s, strlen(s) + 1);
+
+        // then it's server turn
+        if(read(serv, s, sizeof(s)) == 0){
+            printf("Server crashed\n");
+            printf("Using backup service...");
+            close(serv);
+            ad.sin_port = htons(2412);
+            ad.sin_addr.s_addr = inet_addr("192.168.99.100");
+            tcp_connect();
+        }
+        else{
+            printf("Action performed successfully!");
+        } 
+    }*/
     while (1) {
 
         char *keyTemp,*valueTemp;        
@@ -108,107 +121,147 @@ int main(int argc, char* argv[]) {
             switch(choose){
                 //insert
                 case '1':
-                    s=NULL;
-                    printf("INSERT \n");
+                s=NULL;
+                printf("INSERT \n");
                     //prevent new line
-                    tempError = inputString(stdin,10);
-                    printf("Enter Key : \n");
+                tempError = inputString(stdin,10);
+                printf("Enter Key : \n");
                     //dynamics input for key
-                    keyTemp = inputString(stdin,10);
-                    printf("Enter Value : \n");
+                keyTemp = inputString(stdin,10);
+                printf("Enter Value : \n");
                     //dynamics input for value
-                    valueTemp = inputString(stdin,10);
-                    s = (char *) malloc(sizeof(char)*(strlen(keyTemp)+strlen(valueTemp)+50));
+                valueTemp = inputString(stdin,10);
+                s = (char *) malloc(sizeof(char)*(strlen(keyTemp)+strlen(valueTemp)+50));
                     //strcat(s,insertCommand);
-                    s[0] = '\0';
+                s[0] = '\0';
                     //add default command string
-                    strcat(s,"<CMD>insert</CMD>");
-                    strcatMutiplyKV(s,keyTemp,valueTemp);
+                strcat(s,"<CMD>insert</CMD>");
+                strcatMutiplyKV(s,keyTemp,valueTemp);
                     //get length of string + terminate character
-                    length = strlen(s)+1;
-                    printf("%s\n", s);
+                length = strlen(s)+1;
+                printf("%s\n", s);
                     //from int to string
-                    sprintf(lengthChar, "%d", length);
+                sprintf(lengthChar, "%d", length);
                     // write(serv, lengthChar, 10);
                     //send data to server
-                    write(serv, s, strlen(s));
-                    
-                    free(keyTemp);
-                    free(valueTemp);
-                    free(s);
-                    read(serv, lengthChar, sizeof(lengthChar));
-                    printf("%s\n", lengthChar);
-                    break;
+                write(serv, s, strlen(s));
+
+                free(keyTemp);
+                free(valueTemp);
+                free(s);
+                if(read(serv, lengthChar, sizeof(lengthChar))==0){
+                    printf("Server crashed\n");
+                    printf("Using backup service...");
+                    close(serv);
+                    ad.sin_port = htons(2412);
+                    ad.sin_addr.s_addr = inet_addr("192.168.99.100");
+                    tcp_connect();
+                }
+                else{
+                    printf("Action performed successfully!");
+                } 
+                //printf("%s\n", lengthChar);
+                break;
                 //modify
                 case '2':
-                    printf("MODIFY\n");
-                    tempError = inputString(stdin,10);
-                    
-                    printf("Enter Key : \n");
-                    keyTemp = inputString(stdin,10);
-                    printf("Enter Value : \n");
-                    valueTemp = inputString(stdin,10);
-                    s = (char *) malloc(sizeof(char)*(strlen(keyTemp)+strlen(valueTemp)+50));
+                printf("MODIFY\n");
+                tempError = inputString(stdin,10);
+
+                printf("Enter Key : \n");
+                keyTemp = inputString(stdin,10);
+                printf("Enter Value : \n");
+                valueTemp = inputString(stdin,10);
+                s = (char *) malloc(sizeof(char)*(strlen(keyTemp)+strlen(valueTemp)+50));
                     // strcat(s,modifyCommand);
-                    s[0] = '\0';
-                    strcat(s,"<CMD>modify</CMD>");
-                    strcatMutiplyKV(s,keyTemp,valueTemp);
-                    length = strlen(s)+1;
-                    sprintf(lengthChar, "%d", length);
+                s[0] = '\0';
+                strcat(s,"<CMD>modify</CMD>");
+                strcatMutiplyKV(s,keyTemp,valueTemp);
+                length = strlen(s)+1;
+                sprintf(lengthChar, "%d", length);
                     // write(serv, lengthChar, strlen(lengthChar));
-                    write(serv, s, length);
-                    free(keyTemp);
-                    free(valueTemp);
-                    free(s);
-                    read(serv, lengthChar, sizeof(lengthChar));
-                    printf("%s\n", lengthChar);
-                    break;
+                write(serv, s, length);
+                free(keyTemp);
+                free(valueTemp);
+                free(s);
+                if(read(serv, lengthChar, sizeof(lengthChar))==0){
+                    printf("Server crashed\n");
+                    printf("Using backup service...");
+                    close(serv);
+                    ad.sin_port = htons(2412);
+                    ad.sin_addr.s_addr = inet_addr("192.168.99.100");
+                    tcp_connect();
+                }
+                else{
+                    printf("Action performed successfully!");
+                }
+                //printf("%s\n", lengthChar);
+                break;
                 //delete
                 case '3':
-                    printf("DELETE\n");
-                    tempError = inputString(stdin,10);
-                    printf("Enter Key : \n");
-                    keyTemp = inputString(stdin,10);
-                    s = (char *) malloc(sizeof(char)*(strlen(keyTemp)+50));
+                printf("DELETE\n");
+                tempError = inputString(stdin,10);
+                printf("Enter Key : \n");
+                keyTemp = inputString(stdin,10);
+                s = (char *) malloc(sizeof(char)*(strlen(keyTemp)+50));
                     // strcat(s,deleteCommand);
-                    s[0] = '\0';
-                    strcat(s,"<CMD>delete</CMD>");
-                    strcatMutiplyK(s,keyTemp);
-                    length = strlen(s)+1;
-                    sprintf(lengthChar, "%d", length);
+                s[0] = '\0';
+                strcat(s,"<CMD>delete</CMD>");
+                strcatMutiplyK(s,keyTemp);
+                length = strlen(s)+1;
+                sprintf(lengthChar, "%d", length);
                     // write(serv, lengthChar, strlen(lengthChar));
-                    write(serv, s, length);
-                    free(keyTemp);    
-                    free(s);
-                    read(serv, lengthChar, sizeof(lengthChar));
-                    printf("%s\n", lengthChar);
-                    break;
+                write(serv, s, length);
+                free(keyTemp);    
+                free(s);
+                if(read(serv, lengthChar, sizeof(lengthChar))==0){
+                    printf("Server crashed\n");
+                    printf("Using backup service...");
+                    close(serv);
+                    ad.sin_port = htons(2412);
+                    ad.sin_addr.s_addr = inet_addr("192.168.99.100");
+                    tcp_connect();
+                }
+                else{
+                    printf("Action performed successfully!");
+                }
+                //printf("%s\n", lengthChar);
+                break;
                 //get
                 case '4':
-                    printf("GET\n");
-                    tempError = inputString(stdin,10);
-                    printf("Enter Key : \n");
-                    keyTemp = inputString(stdin,10);
-                    s = (char *) malloc(sizeof(char)*(strlen(keyTemp)+50));
+                printf("GET\n");
+                tempError = inputString(stdin,10);
+                printf("Enter Key : \n");
+                keyTemp = inputString(stdin,10);
+                s = (char *) malloc(sizeof(char)*(strlen(keyTemp)+50));
                     // strcat(s,getCommand);
-                    s[0] = '\0';
-                    strcat(s,"<CMD>get</CMD>");
-                    strcatMutiplyK(s,keyTemp);
-                    sprintf(lengthChar, "%d", length);
+                s[0] = '\0';
+                strcat(s,"<CMD>get</CMD>");
+                strcatMutiplyK(s,keyTemp);
+                sprintf(lengthChar, "%d", length);
                     // write(serv, lengthChar, strlen(lengthChar));
-                    write(serv, s, length);
-                    free(keyTemp);
-                    free(s);
-                    char tempContent[150];
-                    read(serv, tempContent, sizeof(tempContent));
-                    printf("%s\n", tempContent);
-                    break;
+                write(serv, s, length);
+                free(keyTemp);
+                free(s);
+                char tempContent[150];
+                if(read(serv, lengthChar, sizeof(lengthChar))==0){
+                    printf("Server crashed\n");
+                    printf("Using backup service...");
+                    close(serv);
+                    ad.sin_port = htons(2412);
+                    ad.sin_addr.s_addr = inet_addr("192.168.99.100");
+                    tcp_connect();
+                }
+                else{
+                    printf("Action performed successfully!");
+                }
+                //printf("%s\n", tempContent);
+                break;
                 //quit
                 case '5':
-                    printf("QUIT\n");
-                    break;
+                printf("QUIT\n");
+                break;
                 default:
-                    printf("Choose Again ....\n");
+                printf("Choose Again ....\n");
 
             }
         }
@@ -219,5 +272,22 @@ int main(int argc, char* argv[]) {
 
         // then it's server turn
     }
+}
+
+
+int main(int argc, char* argv[]) {
+    int j,i;
+    char *s;
+    char *tempError;
+    printf("\n");
+    socklen_t ad_length = sizeof(ad);
+    struct hostent *hep;
+    // init address
+    hep = gethostbyname(argv[1]);
+    memset(&ad, 0, sizeof(ad));
+    ad.sin_family = AF_INET;
+    ad.sin_addr = *(struct in_addr *)hep->h_addr_list[0];
+    ad.sin_port = htons(12345);
+    tcp_connect();
 }
 

@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <unistd.h>
 
 int main() {
     int ss, cli, pid;
@@ -38,7 +39,7 @@ int main() {
                 printf("client says: %s\n",s);
 
                 // now it's my (server) turn
-                printf("server>", s);
+                printf("server>");
                 scanf("%s", s);
                 write(cli, s, strlen(s) + 1);
             }

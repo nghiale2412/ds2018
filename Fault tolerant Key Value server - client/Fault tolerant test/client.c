@@ -12,7 +12,6 @@
 #include <netinet/in.h>
 
 struct sockaddr_in ad;
-void server_status_check(int sock);
 void tcp_connect();
 
 int main(int argc, char* argv[]) {
